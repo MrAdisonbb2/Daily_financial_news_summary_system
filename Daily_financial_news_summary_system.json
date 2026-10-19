@@ -23,7 +23,15 @@
     },
     {
       "parameters": {
-        "options": {}
+        "url": "https://nfs.faireconomy.media/ff_calendar_thisweek.jso",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
@@ -32,12 +40,15 @@
         960
       ],
       "id": "1695d080-8b3b-4fa5-add0-04003d43b999",
-      "name": "HTTP Request"
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "url": "https://www.federalreserve.gov/feeds/press_all.xml",
-        "options": {}
+        "options": {
+          "ignoreSSL": false
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
@@ -46,12 +57,15 @@
         0
       ],
       "id": "895a8ed7-5886-47fd-bd85-32db7a085cd6",
-      "name": "Federal Reserve press releases (RSS)"
+      "name": "Federal Reserve press releases (RSS)",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "url": "https://www.fxstreet.com/rss/news",
-        "options": {}
+        "options": {
+          "ignoreSSL": false
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
@@ -60,12 +74,15 @@
         192
       ],
       "id": "d03d1605-5196-4b95-85e6-f2eecc7126b8",
-      "name": "FXStreet (gold/forex)"
+      "name": "FXStreet (gold/forex)",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "url": "https://www.kitco.com/news/category/mining/rss",
-        "options": {}
+        "options": {
+          "ignoreSSL": false
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
@@ -74,12 +91,15 @@
         384
       ],
       "id": "c1906618-4b45-45c9-8746-b53da21276b0",
-      "name": "Kitco News (RSS)"
+      "name": "Kitco News (RSS)",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "url": "https://www.cnbc.com/rss-feeds/",
-        "options": {}
+        "options": {
+          "ignoreSSL": false
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
@@ -88,12 +108,15 @@
         576
       ],
       "id": "c100e22b-0f9e-4159-84d0-a54b3ce78b88",
-      "name": "CNBC Markets"
+      "name": "CNBC Markets",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "url": "https://news.google.com/rss/search?q=XAUUSD+gold&hl=en-US&gl=US&ceid=US:en",
-        "options": {}
+        "options": {
+          "ignoreSSL": false
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
@@ -102,7 +125,8 @@
         768
       ],
       "id": "f3025701-6252-430a-9306-c4470e0b8e91",
-      "name": "Google News"
+      "name": "Google News",
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -149,7 +173,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "926110d1-9099-42df-94bc-923b601452b1",
+  "versionId": "facc5f9c-ae21-49eb-a6b7-43a87cd85d57",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "06bf98694494b944977af4e3853f1acfee5348c2f906da5901f7e4bca253fad7"
