@@ -1,0 +1,159 @@
+{
+  "name": "Daily_financial_news_summary_system",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        480
+      ],
+      "id": "909fbc81-25e7-4d72-ba67-bf365b90d122",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        144,
+        960
+      ],
+      "id": "1695d080-8b3b-4fa5-add0-04003d43b999",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        0
+      ],
+      "id": "895a8ed7-5886-47fd-bd85-32db7a085cd6",
+      "name": "Federal Reserve press releases (RSS)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.fxstreet.com/rss/news",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        192
+      ],
+      "id": "d03d1605-5196-4b95-85e6-f2eecc7126b8",
+      "name": "FXStreet (gold/forex)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.kitco.com/news/category/mining/rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        384
+      ],
+      "id": "c1906618-4b45-45c9-8746-b53da21276b0",
+      "name": "Kitco News (RSS)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.cnbc.com/rss-feeds/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        576
+      ],
+      "id": "c100e22b-0f9e-4159-84d0-a54b3ce78b88",
+      "name": "CNBC Markets"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=XAUUSD+gold&hl=en-US&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        768
+      ],
+      "id": "f3025701-6252-430a-9306-c4470e0b8e91",
+      "name": "Google News"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Federal Reserve press releases (RSS)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CNBC Markets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Kitco News (RSS)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "FXStreet (gold/forex)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "926110d1-9099-42df-94bc-923b601452b1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "06bf98694494b944977af4e3853f1acfee5348c2f906da5901f7e4bca253fad7"
+  },
+  "id": "bTZskNqsverVcftE",
+  "tags": []
+}
