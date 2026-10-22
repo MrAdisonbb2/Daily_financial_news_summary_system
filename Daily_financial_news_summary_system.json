@@ -15,33 +15,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -80,
-        480
+        -272,
+        576
       ],
       "id": "909fbc81-25e7-4d72-ba67-bf365b90d122",
       "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
-        "url": "https://nfs.faireconomy.media/ff_calendar_thisweek.jso",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          },
-          "timeout": 10000
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        144,
-        960
-      ],
-      "id": "1695d080-8b3b-4fa5-add0-04003d43b999",
-      "name": "HTTP Request",
-      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -53,8 +31,8 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        144,
-        0
+        -48,
+        288
       ],
       "id": "895a8ed7-5886-47fd-bd85-32db7a085cd6",
       "name": "Federal Reserve press releases (RSS)",
@@ -70,8 +48,8 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        144,
-        192
+        -48,
+        480
       ],
       "id": "d03d1605-5196-4b95-85e6-f2eecc7126b8",
       "name": "FXStreet (gold/forex)",
@@ -79,7 +57,7 @@
     },
     {
       "parameters": {
-        "url": "https://www.kitco.com/news/category/mining/rss",
+        "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839069",
         "options": {
           "ignoreSSL": false
         }
@@ -87,25 +65,8 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        144,
-        384
-      ],
-      "id": "c1906618-4b45-45c9-8746-b53da21276b0",
-      "name": "Kitco News (RSS)",
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
-        "url": "https://www.cnbc.com/rss-feeds/",
-        "options": {
-          "ignoreSSL": false
-        }
-      },
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.2,
-      "position": [
-        144,
-        576
+        -48,
+        672
       ],
       "id": "c100e22b-0f9e-4159-84d0-a54b3ce78b88",
       "name": "CNBC Markets",
@@ -113,7 +74,7 @@
     },
     {
       "parameters": {
-        "url": "https://news.google.com/rss/search?q=XAUUSD+gold&hl=en-US&gl=US&ceid=US:en",
+        "url": "https://news.google.com/rss/search?q=(XAUUSD+OR+gold+OR+EURUSD+OR+%22euro+dollar%22+OR+%22tech+stocks%22+OR+Nasdaq)+when:1d&hl=en-US&gl=US&ceid=US:en",
         "options": {
           "ignoreSSL": false
         }
@@ -121,12 +82,454 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        144,
-        768
+        -48,
+        864
       ],
       "id": "f3025701-6252-430a-9306-c4470e0b8e91",
       "name": "Google News",
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3d9cc828-6498-4b32-9a33-a0af169755f8",
+              "leftValue": "={{ $json.categories }}",
+              "rightValue": "Monetary Policy",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        176,
+        288
+      ],
+      "id": "24b9f69c-1fb1-4426-b6f5-ceb65c8900c1",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e653868-44e5-4385-873f-1fae1d77be29",
+              "name": "source",
+              "value": "Federal Reserve",
+              "type": "string"
+            },
+            {
+              "id": "e2b9531e-fa49-4a10-b0f9-ccd75d876c82",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afa60ba-0928-44db-83fa-03561c38f681",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "01b35539-4c8d-4c28-ab59-2fb87c3a7dfa",
+              "name": "snippet",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "c1cb802e-c57f-41d4-9da3-e48b9af4813e",
+              "name": "published_th",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "4b5f72ae-6f6d-4753-b013-efcafb731d1e",
+              "name": "isoDate",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        288
+      ],
+      "id": "bc78804a-d978-4aef-9333-e004681d11fa",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e653868-44e5-4385-873f-1fae1d77be29",
+              "name": "source",
+              "value": "FXStreet",
+              "type": "string"
+            },
+            {
+              "id": "e2b9531e-fa49-4a10-b0f9-ccd75d876c82",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afa60ba-0928-44db-83fa-03561c38f681",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "01b35539-4c8d-4c28-ab59-2fb87c3a7dfa",
+              "name": "snippet",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "c1cb802e-c57f-41d4-9da3-e48b9af4813e",
+              "name": "published_th",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "0f803256-349a-4a3b-9fb8-43d375867be6",
+              "name": "isoDate",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        480
+      ],
+      "id": "f5a9e152-0a7d-4fc3-8c54-cb8a574382bc",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3d9cc828-6498-4b32-9a33-a0af169755f8",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "={{ $json.title.toLowerCase() }}",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        176,
+        480
+      ],
+      "id": "9f374e4e-46a1-4014-9eba-4eb50b1ba2d9",
+      "name": "Filter1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38f58529-4d31-4f19-b4c6-322681036458",
+              "name": "source",
+              "value": "CNBC Markets",
+              "type": "string"
+            },
+            {
+              "id": "28bb4d7f-fa63-458f-8350-f02265d63b0d",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "77744804-e84b-42e5-84e5-2fadd95d67bd",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "3b420a3e-1212-4740-ad41-fc317c66430b",
+              "name": "snippet",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "2251589a-53a7-4d37-84db-de44bd7e2c57",
+              "name": "published_th",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "f85dd7f5-4dcc-48c0-b3de-293fdd5208be",
+              "name": "isoDate",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        672
+      ],
+      "id": "7af89597-42f4-48a0-b0e9-961b8613126a",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "24ecbf21-d3c1-4669-984f-bbe9de07ff99",
+              "name": "source",
+              "value": "={{ $json.title.match(/\\s-\\s([^-]+)$/)?.[1] ?? 'Google News' }}",
+              "type": "string"
+            },
+            {
+              "id": "8f484b5f-c010-4607-8708-0a0abe6d9d64",
+              "name": "title",
+              "value": "={{ $json.title.replace(/\\s-\\s[^-]+$/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "07c459a5-8cb1-4d42-8966-18996192cb63",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "fa5d4433-690f-4a19-8d0f-6046972a6093",
+              "name": "snippet",
+              "value": "={{ $json.contentSnippet.slice(0, 200) }}",
+              "type": "string"
+            },
+            {
+              "id": "8961f1d8-63fa-4990-8f26-43aaabbd1873",
+              "name": "published_th",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "1d1547c7-e765-4c8b-abbe-d68944d26c77",
+              "name": "isoDate",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        864
+      ],
+      "id": "4cab34b3-1cb2-4d42-bd3f-858c9e0f2547",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        768,
+        544
+      ],
+      "id": "3fa60d38-3ae4-4d81-89a0-eec2dfc32be7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dbab4497-a9d1-48ff-a601-96ba6abd57a1",
+              "leftValue": "={{ $json.isoDate }}",
+              "rightValue": "={{ $now.minus({ hours: 24 }).toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            },
+            {
+              "id": "02afc7b7-f80d-4b9b-b0ce-1a69598602c9",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1024,
+        576
+      ],
+      "id": "e1c27666-6a6f-45a1-a754-ba011fbf5ae1",
+      "name": "Filter2"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "title",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        576
+      ],
+      "id": "95daf903-fba0-45e1-b6de-6f2456d35385",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "isoDate",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        576
+      ],
+      "id": "da7b2340-7f72-430a-bf11-4709faf49c0a",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "คุณเป็นผู้ช่วยสรุปข่าวตลาดการเงินเพื่อการศึกษา ตอบเป็นภาษาไทยที่ อ่านเข้าใจง่าย กระชับ เท่านั้น\n\nหน้าที่:\n- สรุปข่าวจากรายการ JSON ที่ได้รับ โดยใช้เฉพาะข้อมูลในรายการ ห้ามเพิ่มข้อมูล ตัวเลข หรือเหตุการณ์ที่ไม่มีในข่าว\n- จัดกลุ่มเป็น 4 หัวข้อตามลำดับนี้: 1) ภาพรวมตลาด 2) XAUUSD (ทอง) 3) EURUSD (ยูโร) 4) หุ้นเทค\n- ถ้าหัวข้อใดไม่มีข่าว ให้เขียนว่า \"ไม่มีข่าวในรอบนี้\"\n- แต่ละข่าวสรุปไม่เกิน 2 บรรทัด และรวมไม่เกิน 40 ข่าว\n- สรุปโดยที่บอกด้วยว่า ข่าวแต่ละข่าวที่สรุปมานั้นมีผลกระทบอะไร เกิดผลกระทบกับสิ่งใด\n\nรูปแบบแต่ละข่าว:\n- ให้แยก \"ข้อเท็จจริง\" และ \"ความเห็น\" ชัดเจน ความเห็นให้ระบุว่าเป็นความเห็นของใคร (ถ้ามีในข่าว)\n- ทุกข่าวต้องมี แหล่งที่มา (source), เวลาไทย (published_th) และลิงก์ (link)\n- เรียงข่าวในแต่ละหัวข้อจากใหม่ไปเก่า\n\nข้อห้าม:\n- ห้ามให้คำแนะนำซื้อ ขาย หรือถือสินทรัพย์\n- ห้ามคาดการณ์ราคาเป็นตัวเลขที่ไม่มีในข่าว",
+              "role": "model"
+            },
+            {
+              "content": "=ข้อมูลข่าว (JSON):\n{{ JSON.stringify($input.all().map(i => i.json)) }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxOutputTokens": 8192
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        576
+      ],
+      "id": "8b852571-6fc0-4f23-b502-ce4e932645e8",
+      "name": "Message a model",
+      "executeOnce": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "oQfQ4sc0yZgFyCaZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/1562744400856223764/tLQZUCDrvH4aEKyISqw9m7Krwh7zI6v9TgSKyJ8raSbRhfoq3-3ZLc1yDvmgBr8oBuyn",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=content",
+              "value": "={{ $json.content.parts[0].text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2016,
+        576
+      ],
+      "id": "9ad16028-a3a0-4c38-8ffa-62b0f94dbedb",
+      "name": "HTTP Request"
     }
   ],
   "pinData": {},
@@ -145,11 +548,6 @@
             "index": 0
           },
           {
-            "node": "Kitco News (RSS)",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "FXStreet (gold/forex)",
             "type": "main",
             "index": 0
@@ -158,7 +556,167 @@
             "node": "Google News",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Google News": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Federal Reserve press releases (RSS)": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FXStreet (gold/forex)": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CNBC Markets": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
           {
             "node": "HTTP Request",
             "type": "main",
@@ -173,7 +731,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "facc5f9c-ae21-49eb-a6b7-43a87cd85d57",
+  "versionId": "6ef22551-12a2-41a9-9be0-ce0149bf8c52",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "06bf98694494b944977af4e3853f1acfee5348c2f906da5901f7e4bca253fad7"
